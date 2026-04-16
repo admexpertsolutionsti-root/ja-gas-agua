@@ -27,6 +27,9 @@ const btnVejaMais = document.getElementById('btn-vejaMais');
 let carrinho = [];
 let totalCarrinho = 0;
 
+let enderecoSalvo = '';
+let pagamentoSalvo = '';
+
 // ======================
 // 📌 Parte 2: Horario de Funcionando
 // ======================
@@ -245,11 +248,11 @@ function abrirModalCarrinho() {
     metodoPagamentoDiv.className = "mt-4";
     metodoPagamentoDiv.innerHTML = `
         <p class="font-bold mt-2">Método de Pagamento:</p>
-        <select id="metodo-pagamento" class="w-full border-2 border-black rounded p-1 my-1">
-            <option value="" disabled selected>Selecione uma opção</option>
-            <option value="PIX">PIX</option>
-            <option value="Dinheiro">Dinheiro</option>
-            <option value="Cartão">Cartão</option>
+        <select id="metodo-pagamento" onchange="pagamentoSalvo = this.value" class="w-full border-2 border-black rounded p-1 my-1">
+            <option value="" disabled ${!pagamentoSalvo ? 'selected' : ''}>Selecione uma opção</option>
+            <option value="PIX" ${pagamentoSalvo === 'PIX' ? 'selected' : ''}>PIX</option>
+            <option value="Dinheiro" ${pagamentoSalvo === 'Dinheiro' ? 'selected' : ''}>Dinheiro</option>
+            <option value="Cartão" ${pagamentoSalvo === 'Cartão' ? 'selected' : ''}>Cartão</option>
         </select>
     `;
     conteudoCarrinho.appendChild(metodoPagamentoDiv);
@@ -259,7 +262,7 @@ function abrirModalCarrinho() {
     enderecoDiv.className = "mt-4";
     enderecoDiv.innerHTML = `
         <label for="input-endereco" class="block text-sm font-bold">Endereço:</label>
-        <input type="text" id="input-endereco" class="w-full p-2 border rounded" placeholder="Digite seu endereço">
+        <input type="text" id="input-endereco" value="${enderecoSalvo}" oninput="enderecoSalvo = this.value" class="w-full p-2 border rounded" placeholder="Digite seu endereço">
         <span id="mensagem-erro" class="text-red-500 text-sm mt-1 hidden">Por favor, preencha o endereço.</span>
     `;
     conteudoCarrinho.appendChild(enderecoDiv);
@@ -363,9 +366,11 @@ function enviarPedido() {
     const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
     window.open(urlWhatsApp, '_blank');
 
-    // Limpa o carrinho
+    // Limpa o carrinho e a memória
     carrinho = [];
     totalCarrinho = 0;
+    enderecoSalvo = '';
+    pagamentoSalvo = '';
 
     // Atualiza o footer para exibir carrinho vazio
     quantidadeItensCard.textContent = `( 0 )`;
